@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.telematis.dao.DistributorDao">
+
+	<!-- 根据用户名查询分销商 -->
+	<select id="findDistributorByPhone"
+		parameterType="java.lang.String" resultType="distributor">
+		select
+		dist_id,dist_password,dist_company,dist_area
+		from
+		distributor where
+		dist_phone=#{dist_phone}
+	</select>
+
+	<!-- 根据电话号码修改密码 -->
+	<update id="updatePassword" parameterType="simplifyDistributor">
+		update distributor set
+		dist_password=#{dist_password} where dist_phone=#{dist_phone}
+	</update>
+	<!-- 记录销售车辆的数据 -->
+	<insert id="insertVehiclesSale" parameterType="vehiclesSale">
+		insert into
+		vehicles_sale
+		(dist_phone,user_phone,vehicles_sale_type,vehicles_sale_price,vehicles_sale_number,
+		vehicles_sale_time,vehicles_sale_area)
+		values(#{dist_phone},#{user_phone},#{vehicles_sale_type},#{vehicles_sale_price},
+		#{vehicles_sale_number},#{vehicles_sale_time },#{vehicles_sale_area})
+	</insert>
+
+	<!-- 查询所有已售出的商品 -->
+	<select id="findAllVehiclesSale" resultType="vehiclesSale"
+		parameterType="saleArea">
+		select
+		vehicles_sale_id,dist_phone,dist_area,user_phone,vehicles_sale_type,vehicles_sale_price,
+		vehicles_sale_number,vehicles_sale_time,vehicles_sale_area from
+		vehicles_sale
+		<where>
+			<if test="data!=null">
+				dist_company=#{data}
+			</if>
+		</where>
+	</select>
+
+	<!-- 查询所有的车类型 -->
+	<select id="findAllVehiclesSaleType"
+		resultType="java.lang.String">
+		select vehicles_sale_type from
+		vehicles_sale_type
+	</select>
+
+	<select id="findAllArea" resultType="java.lang.String">
+		select dist_area from
+		dist_area
+	</select>
+</mapper>

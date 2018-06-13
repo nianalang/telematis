@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.telematis.dao.AdminDao">
+
+	<!-- 根据用户名查询Admin -->
+	<select id="findAdminByPhone" parameterType="java.lang.String"
+		resultType="admin">
+		select admin_id,admin_phone,admin_password,admin_email from
+		admin where
+		admin_phone=#{admin_phone}
+	</select>
+
+	<!-- 添加一名管理员 -->
+	<insert id="insertAdmin" parameterType="admin">
+		insert into
+		admin(admin_phone,admin_password,admin_email)
+		values(#{admin_phone},#{admin_password},#{admin_email})
+	</insert>
+
+	<!-- 删除一名管理员 -->
+	<delete id="deleteAdminByPhone" parameterType="java.lang.String">
+		delete from admin
+		where admin_phone=#{admin_phone}
+	</delete>
+
+	<!-- 查询所有的管理员 -->
+	<select id="findAllAdmin" resultType="admin">
+		select
+		admin_id,admin_phone,admin_password,admin_email from admin
+	</select>
+
+	<!-- 添加一名分销商 -->
+	<insert id="insertDistributor" parameterType="distributor">
+		insert into
+		distributor(dist_phone,dist_password,dist_company,dist_area)
+		values(#{dist_phone},#{dist_password},#{dist_company},#{dist_area})
+	</insert>
+
+	<!-- 删除一名分销商 -->
+	<delete id="deleteDistributorByPhone"
+		parameterType="java.lang.String">
+		delete from distributor where dist_phone=#{dist_phone}
+	</delete>
+
+	<!-- 重置分销商的密码 -->
+	<update id="resetDistributorPassword"
+		parameterType="java.lang.String">
+		update distributor set dist_password=123456 where
+		dist_phone=#{dist_phone}
+	</update>
+
+	<!--根据电话号查询Distributor -->
+	<select id="findDistributorByPhone"
+		parameterType="java.lang.String" resultType="distributor">
+		select
+		dist_id,dist_password,dist_company,dist_area from distributor where
+		dist_phone=#{dist_phone}
+	</select>
+
+	<!-- 查询所有分销商 -->
+	<select id="findAllDistributor" resultType="distributor">
+		select
+		dist_id,dist_phone,dist_password,dist_company,dist_area from
+		distributor
+	</select>
+
+	<!-- 查询所有已售出的商品 -->
+	<select id="findAllVehiclesSale" parameterType="saleArea"
+		resultType="vehiclesSale">
+		select
+		vehicles_sale_id,dist_phone,dist_company,user_phone,vehicles_sale_type,vehicles_sale_price,
+		vehicles_sale_number,vehicles_sale_time,vehicles_sale_area from
+		vehicles_sale
+		<where>
+			<if test="data!=null">
+				dist_area=#{data}
+			</if>
+		</where>
+	</select>
+
+	<!-- -->
+	<select id="findAllCompany" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select
+		vehicles_sale_company from vehicles_sale_company
+		where dist_area=#{dist_area}
+	</select>
+
+
+	<select id="findAllArea" resultType="java.lang.String">
+		select
+		dist_area from
+		dist_area
+	</select>
+	
+	<select id="findAllCartype" resultType="java.lang.String">
+		select
+		vehicles_sale_type from
+		vehicles_sale_type
+	</select>
+</mapper>
